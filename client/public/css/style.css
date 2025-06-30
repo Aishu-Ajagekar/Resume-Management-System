@@ -1,0 +1,6 @@
+@import "./Home.css";
+
+.navbar .nav-link.disabled {
+  color: #ccc;
+  pointer-events: none;
+}
