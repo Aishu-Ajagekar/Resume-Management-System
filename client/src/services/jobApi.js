@@ -3,7 +3,7 @@ import axios from "axios";
 const token = localStorage.getItem("token");
 
 const API = axios.create({
-  baseURL: "http://localhost:7878/api/v1/jobs",
+  baseURL: `${import.meta.env.VITE_API_URL}/api/v1/jobs`,
   headers: {
     Authorization: token,
   },
