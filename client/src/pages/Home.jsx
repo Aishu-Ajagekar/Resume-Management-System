@@ -46,10 +46,11 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="py-5"></div>
+          <div className="py-4"></div>
         </section>
 
         <footer className="text-center py-4 text-white bg-dark">
+          <p>Terms of Service | Privacy Policy</p>
           <p className="mb-0">
             Designed by NoJobs © {new Date().getFullYear()} — All Rights
             Reserved.

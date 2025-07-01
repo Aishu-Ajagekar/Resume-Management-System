@@ -5,9 +5,9 @@ const jwt = require("jsonwebtoken");
 exports.signup = async (req, res) => {
   console.log("✅ Signup route hit");
   try {
-    const { name, email, password, role, answer } = req.body;
+    const { name, email, password, role, securityQuestion, answer } = req.body;
 
-    if (!name || !email || !password || !role || !answer) {
+    if (!name || !email || !password || !role || !securityQuestion || !answer) {
       return res.status(400).json({
         success: false,
         message: "Please provide all required fields.",
@@ -32,6 +32,7 @@ exports.signup = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      securityQuestion,
       answer,
     });
     await user.save();
@@ -45,6 +46,7 @@ exports.signup = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        securityQuestion : user.securityQuestion,
         answer: user.answer,
       },
     });
@@ -118,9 +120,50 @@ exports.login = async (req, res) => {
   }
 };
 
+// exports.forgotPasswordController = async (req, res) => {
+//   try {
+//     const { email, answer, newPassword } = req.body;
+
+//     if (!email || !answer || !newPassword) {
+//       return res.status(400).send({
+//         success: false,
+//         message: "Email, security answer, and new password are required.",
+//       });
+//     }
+
+//     const user = await UserModel.findOne({ email, answer });
+//     if (!user) {
+//       return res.status(404).send({
+//         success: false,
+//         message: "Invalid email or security answer.",
+//       });
+//     }
+
+//     const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+//     user.password = hashedPassword;
+//     await user.save();
+
+//     return res.status(200).send({
+//       success: true,
+//       message: "Password reset successfully.",
+//     });
+//   } catch (error) {
+//     console.error("Forgot Password Error:", error);
+//     return res.status(500).send({
+//       success: false,
+//       message: "Something went wrong while resetting the password.",
+//       error: error.message,
+//     });
+//   }
+// };
+
+
 exports.forgotPasswordController = async (req, res) => {
   try {
-    const { email, answer, newPassword } = req.body;
+    const email = req.body.email?.trim();
+    const answer = req.body.answer?.trim();
+    const newPassword = req.body.newPassword?.trim();
 
     if (!email || !answer || !newPassword) {
       return res.status(400).send({
@@ -129,7 +172,11 @@ exports.forgotPasswordController = async (req, res) => {
       });
     }
 
-    const user = await UserModel.findOne({ email, answer });
+    const user = await UserModel.findOne({
+      email: { $regex: new RegExp("^" + email + "$", "i") },
+      answer, // 🔁 or use bcrypt.compare if hashed
+    });
+
     if (!user) {
       return res.status(404).send({
         success: false,
@@ -138,8 +185,8 @@ exports.forgotPasswordController = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-
     user.password = hashedPassword;
+
     await user.save();
 
     return res.status(200).send({

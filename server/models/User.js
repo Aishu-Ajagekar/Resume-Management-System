@@ -15,15 +15,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    securityQuestion: {
+      type: String,
+      required: true,
+    },
     answer: {
       type: String,
-      required: [true, "answer is required"],
-      trim: true,
+      required: true,
     },
     role: {
       type: String,
       enum: ["admin", "candidate"],
-      default: 'candidate'
+      default: "candidate",
     },
   },
   { timestamps: true }

@@ -91,11 +91,13 @@ const Navbar = () => {
               <>
                 {role === "admin" && (
                   <>
-                    {/* <li className="nav-item">
-                      <Link className="nav-link" to="/admin/applied-jobs">
-                        Applied Job List
-                      </Link>
-                    </li> */}
+                    {location.pathname !== "/admin/home" && (
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/admin/home">
+                          Home
+                        </Link>
+                      </li>
+                    )}
                     <li className="nav-item">
                       <span className="nav-link">👤 Admin</span>
                     </li>

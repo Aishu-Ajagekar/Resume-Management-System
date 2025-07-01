@@ -1,75 +1,4 @@
-// // src/pages/Signup.jsx
-// import { useState } from "react";
-// import { toast } from "react-toastify";
-// // import API from "../services/api";
-// import axios from "axios";
 
-// function Signup() {
-//   const [form, setForm] = useState({
-//     name: "",
-//     email: "",
-//     password: "",
-//     role: "candidate",
-//   });
-
-//   const handleChange = (e) => {
-//     setForm({ ...form, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       // await API.post("/auth/v1/signup", form);
-//       await axios.post(`${process.env.VITE_API_URL}/api/v1/auth/signup`, form);
-//       toast.success("Signup successful! Please login.");
-//     } catch (err) {
-//       toast.error(err.response?.data?.message || "Signup failed");
-//     }
-//   };
-
-//   return (
-//     <div className="container mt-5">
-//       <h2>Signup</h2>
-//       <form onSubmit={handleSubmit}>
-//         <input
-//           name="name"
-//           type="text"
-//           placeholder="Name"
-//           onChange={handleChange}
-//           className="form-control mb-2"
-//         />
-//         <input
-//           name="email"
-//           type="email"
-//           placeholder="Email"
-//           onChange={handleChange}
-//           className="form-control mb-2"
-//         />
-//         <input
-//           name="password"
-//           type="password"
-//           placeholder="Password"
-//           onChange={handleChange}
-//           className="form-control mb-2"
-//         />
-//         <select
-//           name="role"
-//           onChange={handleChange}
-//           className="form-control mb-2"
-//         >
-//           <option value="role">Role</option>
-//           <option value="candidate">Candidate</option>
-//           <option value="admin">Admin</option>
-//         </select>
-//         <button className="btn btn-primary">Signup</button>
-//       </form>
-//     </div>
-//   );
-// }
-
-// export default Signup;
-
-// src/pages/Signup.jsx
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -83,6 +12,7 @@ const Signup = () => {
     email: "",
     password: "",
     role: "candidate",
+    securityQuestion: "",
     answer: "",
   });
 
@@ -93,7 +23,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:7878/api/v1/auth/signup";
+      const url = `${import.meta.env.VITE_API_URL}/api/v1/auth/signup`;
       console.log("urlllll", url);
       console.log("form", form);
       await axios.post(url, form);
@@ -105,7 +35,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="container py-4">
+    <div className="container py-2">
       <div className="row align-items-center">
         {/* Left Side: Image */}
         <div className="col-md-6 text-center">
@@ -153,7 +83,6 @@ const Signup = () => {
               <input
                 type="password"
                 name="password"
-                
                 className="form-control"
                 placeholder="Enter password"
                 value={form.password}
@@ -162,7 +91,7 @@ const Signup = () => {
               />
             </div>
 
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label className="form-label">Security Answer</label>
               <input
                 type="text"
@@ -170,6 +99,45 @@ const Signup = () => {
                 autoComplete="off"
                 className="form-control"
                 placeholder="Enter sport name"
+                value={form.answer}
+                onChange={handleChange}
+                required
+              />
+            </div> */}
+
+            <div className="mb-3">
+              <label className="form-label">Security Question</label>
+              <select
+                name="securityQuestion"
+                className="form-select"
+                value={form.securityQuestion}
+                onChange={handleChange}
+                required
+              >
+                <option value="">-- Select a question --</option>
+                <option value="What is your pet's name?">
+                  What is your pet's name?
+                </option>
+                <option value="What is your favorite color?">
+                  What is your favorite color?
+                </option>
+                <option value="What city were you born in?">
+                  What city were you born in?
+                </option>
+                <option value="What is your favorite sport?">
+                  What is your favorite sport?
+                </option>
+              </select>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Your Answer</label>
+              <input
+                type="text"
+                name="answer"
+                autoComplete="off"
+                className="form-control"
+                placeholder="Enter your answer"
                 value={form.answer}
                 onChange={handleChange}
                 required

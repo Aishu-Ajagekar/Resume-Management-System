@@ -76,9 +76,10 @@ exports.updateApplicationStatus = async (req, res) => {
       .populate("job", "title");
 
     if (!application) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Application not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Application not found",
+      });
     }
 
     application.status = status;
@@ -89,31 +90,41 @@ exports.updateApplicationStatus = async (req, res) => {
       message: `Application ${status} and email sent.`,
     });
 
-    // optional: send email to candidate
-    // const emailText = `Hi ${application.candidate.name},\n\nYour application for ${application.job.title} has been ${status}.`;
+    // Prepare email text
     const emailText = `Hi ${application.candidate.name},
 
-    Your application for the position of ${application.job.title} has been ${status}.
+Your application for the position of ${application.job.title} has been ${status}.
 
-    Thank you for your interest.
+Thank you for your interest.
 
-    Best regards,  
-    Team HR`;
+Best regards`;
 
-    await sendEmail(
-      application.candidate.email,
-      "Application status",
-      emailText
-    );
+    try {
+      // Attempt to send the email
+      await sendEmail(
+        application.candidate.email,
+        "Application Status Update",
+        emailText
+      );
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError);
+      // You can optionally log this or notify admin
+    }
 
-    
+    // Send final response to client
+    // res.status(200).json({
+    //   success: true,
+    //   message: `Application marked as ${status}. Email is sent.`,
+    // });
   } catch (error) {
-    console.error("Email sending failed:",error);
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to update status" });
+    console.error("Status update error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update application status",
+    });
   }
 };
+
 
 //  Get applied job IDs for current candidate
 exports.getAppliedJobIdsByCandidate = async (req, res) => {
