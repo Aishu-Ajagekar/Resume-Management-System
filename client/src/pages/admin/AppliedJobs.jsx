@@ -153,7 +153,7 @@ const AppliedJobs = () => {
                 </td>
                 <td>
                   <a
-                    href={`http://localhost:7878/api/v1/file/${app.resume}`}
+                    href={`${import.meta.env.VITE_API_URL}/api/v1/file/${app.resume}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
