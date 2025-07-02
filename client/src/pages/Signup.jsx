@@ -33,8 +33,7 @@ const Signup = () => {
       toast.success("Signup successful! Please login.");
       navigate("/login");
     } catch (err) {
-      const msg =
-        err?.response?.data?.message || "Signup failed. Try again.";
+      const msg = err?.response?.data?.message || "Signup failed. Try again.";
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -112,7 +111,7 @@ const Signup = () => {
                   required
                   disabled={loading}
                 >
-                  <option value="">-- Select a question --</option>
+                  {/* <option value="">-- Select a question --</option>
                   <option value="What is your pet's name?">
                     What is your pet's name?
                   </option>
@@ -121,7 +120,7 @@ const Signup = () => {
                   </option>
                   <option value="What city were you born in?">
                     What city were you born in?
-                  </option>
+                  </option> */}
                   <option value="What is your favorite sport?">
                     What is your favorite sport?
                   </option>
