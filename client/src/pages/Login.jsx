@@ -8,9 +8,14 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // ✅ loading state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return; // prevent double click
+
+    setLoading(true);
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/auth/login`,
@@ -34,7 +39,9 @@ const Login = () => {
         toast.error("Unknown user role.");
       }
     } catch (err) {
-      toast.error(err.message || "Login failed");
+      toast.error(err?.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,6 +68,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
             <div className="mb-3">
@@ -72,24 +80,29 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
-            <button
-              type="submit"
-              className="btn"
-              style={{ backgroundColor: "#D268CC", color: "white" }}
-            >
-              Login
-            </button>
+            <div className="d-flex flex-wrap gap-2">
+              <button
+                type="submit"
+                className="btn"
+                style={{ backgroundColor: "#D268CC", color: "white" }}
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
 
-            <button
-              type="button"
-              className="btn ms-2"
-              style={{ backgroundColor: "#D268CC", color: "white" }}
-              onClick={() => navigate("/forgot-password")}
-            >
-              Forgot Password
-            </button>
+              <button
+                type="button"
+                className="btn"
+                style={{ backgroundColor: "#D268CC", color: "white" }}
+                onClick={() => navigate("/forgot-password")}
+                disabled={loading}
+              >
+                Forgot Password
+              </button>
+            </div>
           </form>
           <p className="mt-3">
             Don't have an account? <a href="/signup">Create an account</a>
