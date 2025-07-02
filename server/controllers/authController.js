@@ -21,7 +21,7 @@ exports.signup = async (req, res) => {
         // 409 = Conflict
         success: false,
         message: "User already exists. Please login instead.",
-        error: error.message,
+        // error: error.message,
       });
     }
 
@@ -51,7 +51,7 @@ exports.signup = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Signup error:", error.message);
+    console.error("Signup error:", error);
     return res.status(500).json({
       // 500 = Internal Server Error
       success: false,

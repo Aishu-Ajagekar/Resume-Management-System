@@ -33,7 +33,6 @@ const Login = () => {
       } else {
         toast.error("Unknown user role.");
       }
-
     } catch (err) {
       toast.error(err.message || "Login failed");
     }

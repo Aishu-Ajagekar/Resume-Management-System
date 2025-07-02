@@ -4,3 +4,13 @@
   color: #ccc;
   pointer-events: none;
 }
+
+.collapsing {
+  transition: height 0.35s ease;
+}
+
+/* Optional: Improve table responsiveness */
+table td {
+  word-break: break-word;
+  max-width: 150px;
+}

@@ -18,10 +18,15 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  // Function to handle link click and collapse menu
+  const handleNavLinkClick = () => {
+    setIsCollapsed(true);
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-2 fixed-top">
       <div className="container">
-        <Link className="navbar-brand fw-bold" to="">
+        <Link className="navbar-brand fw-bold" to="" onClick={handleNavLinkClick}>
           <i className="bi bi-briefcase-fill me-2"></i>NoJobs
         </Link>
 
@@ -38,28 +43,28 @@ const Navbar = () => {
         </button>
 
         <div
-          className={`collapse navbar-collapse  ${!isCollapsed ? "show" : ""}`}
+          className={`collapse navbar-collapse ${!isCollapsed ? "show" : ""}`}
           id="navbarNav"
         >
           {location.pathname === "/home" && (
-            <ul className="navbar-nav mx-auto me-1 ">
-              <li className="nav-item ">
-                <Link className="nav-link active" to="/home">
+            <ul className="navbar-nav mx-auto me-1">
+              <li className="nav-item">
+                <Link className="nav-link active" to="/home" onClick={handleNavLinkClick}>
                   Home
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="">
+                <Link className="nav-link" to="" onClick={handleNavLinkClick}>
                   About
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="">
+                <Link className="nav-link" to="" onClick={handleNavLinkClick}>
                   Jobs
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="">
+                <Link className="nav-link" to="" onClick={handleNavLinkClick}>
                   Contact
                 </Link>
               </li>
@@ -73,6 +78,7 @@ const Navbar = () => {
                   <Link
                     className="btn btn-outline-light btn-sm d-inline-flex align-items-center gap-1 px-3"
                     to="/login"
+                    onClick={handleNavLinkClick}
                   >
                     <i className="bi bi-box-arrow-in-right"></i> Login
                   </Link>
@@ -82,6 +88,7 @@ const Navbar = () => {
                   <Link
                     className="btn btn-outline-light btn-sm d-inline-flex align-items-center gap-1 px-3"
                     to="/signup"
+                    onClick={handleNavLinkClick}
                   >
                     <i className="bi bi-pencil-square"></i> Signup
                   </Link>
@@ -93,7 +100,11 @@ const Navbar = () => {
                   <>
                     {location.pathname !== "/admin/home" && (
                       <li className="nav-item">
-                        <Link className="nav-link" to="/admin/home">
+                        <Link
+                          className="nav-link"
+                          to="/admin/home"
+                          onClick={handleNavLinkClick}
+                        >
                           Home
                         </Link>
                       </li>
@@ -112,8 +123,11 @@ const Navbar = () => {
 
                 <li className="nav-item d-flex justify-content-between align-items-center">
                   <button
-                    className="btn btn-outline-light btn-sm ms-lg-2 mt-lg-0 "
-                    onClick={handleLogout}
+                    className="btn btn-outline-light btn-sm ms-lg-2 mt-lg-0"
+                    onClick={() => {
+                      handleLogout();
+                      setIsCollapsed(true);
+                    }}
                   >
                     Logout
                   </button>
