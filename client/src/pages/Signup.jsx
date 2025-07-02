@@ -15,39 +15,48 @@ const Signup = () => {
     answer: "",
   });
 
+  const [loading, setLoading] = useState(false); // ✅ loading state
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return;
+    setLoading(true);
+
     try {
       const url = `${import.meta.env.VITE_API_URL}/api/v1/auth/signup`;
-      console.log("urlllll", url);
-      console.log("form", form);
       await axios.post(url, form);
       toast.success("Signup successful! Please login.");
       navigate("/login");
     } catch (err) {
-      toast.error(err.message, "signup Failed");
+      const msg =
+        err?.response?.data?.message || "Signup failed. Try again.";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container py-2">
+    <div className="container py-3">
       <div className="row align-items-center">
         {/* Left Side: Image */}
-        <div className="col-md-6 text-center">
+        <div className="col-md-6 mb-3 mb-md-0 text-center">
           <img
             src="/images/signup.jpg"
             alt="Signup"
             className="img-fluid rounded"
+            style={{ maxHeight: "400px", objectFit: "cover" }}
           />
         </div>
 
         {/* Right Side: Signup Form */}
         <div className="col-12 col-md-6">
-          <div className="card shadow p-3">
+          <div className="card shadow-sm p-4">
             <h2 className="mb-4 text-center">Sign Up</h2>
 
             <form onSubmit={handleSubmit}>
@@ -57,11 +66,11 @@ const Signup = () => {
                   type="text"
                   name="name"
                   className="form-control"
-                  autoComplete="off"
                   placeholder="Enter name"
                   value={form.name}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -71,11 +80,11 @@ const Signup = () => {
                   type="email"
                   name="email"
                   className="form-control"
-                  autoComplete="off"
                   placeholder="Enter email"
                   value={form.email}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -89,6 +98,7 @@ const Signup = () => {
                   value={form.password}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -100,6 +110,7 @@ const Signup = () => {
                   value={form.securityQuestion}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 >
                   <option value="">-- Select a question --</option>
                   <option value="What is your pet's name?">
@@ -122,12 +133,12 @@ const Signup = () => {
                 <input
                   type="text"
                   name="answer"
-                  autoComplete="off"
                   className="form-control"
                   placeholder="Enter your answer"
                   value={form.answer}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -138,6 +149,7 @@ const Signup = () => {
                   className="form-select"
                   value={form.role}
                   onChange={handleChange}
+                  disabled={loading}
                 >
                   <option value="candidate">Candidate</option>
                   <option value="admin">Admin</option>
@@ -149,8 +161,9 @@ const Signup = () => {
                   type="submit"
                   className="btn"
                   style={{ backgroundColor: "#007CFF", color: "white" }}
+                  disabled={loading}
                 >
-                  Register
+                  {loading ? "Registering..." : "Register"}
                 </button>
               </div>
             </form>

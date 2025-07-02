@@ -6,21 +6,17 @@ const AppliedJobs = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedJobId, setSelectedJobId] = useState("");
   const [applications, setApplications] = useState([]);
+  const [loadingId, setLoadingId] = useState(null); // ✅ For individual button loading
 
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/v1/jobs/admin/jobs`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
+        { headers: { Authorization: token } }
       );
       setJobs(data.jobs || []);
     } catch (err) {
-      console.error("❌ Error loading jobs:", err?.response?.data || err.message);
       toast.error("Failed to load job titles");
     }
   };
@@ -30,36 +26,31 @@ const AppliedJobs = () => {
       const token = localStorage.getItem("token");
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/v1/jobapplication/admin/applications/job/${jobId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
+        { headers: { Authorization: token } }
       );
       setApplications(data.applications || []);
     } catch (err) {
-      console.error("❌ Error loading applications:", err?.response?.data || err.message);
       toast.error("Failed to load applications");
     }
   };
 
   const handleStatusUpdate = async (applicationId, status) => {
+    if (loadingId) return;
+    setLoadingId(applicationId); // ✅ Show spinner only for clicked row
+
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.put(
         `${import.meta.env.VITE_API_URL}/api/v1/jobapplication/admin/update-status/${applicationId}`,
         { status },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
+        { headers: { Authorization: token } }
       );
       toast.success(data.message);
       fetchApplications(selectedJobId);
     } catch (err) {
-      console.error("❌ Status update failed:", err?.response?.data || err.message);
       toast.error("Failed to update application status");
+    } finally {
+      setLoadingId(null);
     }
   };
 
@@ -81,7 +72,6 @@ const AppliedJobs = () => {
     <div className="container my-5">
       <h2 className="mb-4 text-center text-md-start">Applied Job List</h2>
 
-      {/* Job Dropdown */}
       <div className="mb-3">
         <label className="form-label">Select Job Position:</label>
         <select
@@ -102,7 +92,6 @@ const AppliedJobs = () => {
         </select>
       </div>
 
-      {/* Applications Table (Responsive) */}
       {applications.length > 0 ? (
         <div className="table-responsive mt-4">
           <table className="table table-bordered table-striped">
@@ -151,9 +140,13 @@ const AppliedJobs = () => {
                             : "btn-success"
                         }`}
                         onClick={() => handleStatusUpdate(app._id, "Shortlisted")}
-                        disabled={app.status === "Shortlisted" || app.status === "Rejected"}
+                        disabled={
+                          loadingId === app._id ||
+                          app.status === "Shortlisted" ||
+                          app.status === "Rejected"
+                        }
                       >
-                        Shortlist
+                        {loadingId === app._id ? "Please wait..." : "Shortlist"}
                       </button>
 
                       <button
@@ -163,9 +156,13 @@ const AppliedJobs = () => {
                             : "btn-danger"
                         }`}
                         onClick={() => handleStatusUpdate(app._id, "Rejected")}
-                        disabled={app.status === "Shortlisted" || app.status === "Rejected"}
+                        disabled={
+                          loadingId === app._id ||
+                          app.status === "Shortlisted" ||
+                          app.status === "Rejected"
+                        }
                       >
-                        Reject
+                        {loadingId === app._id ? "Please wait..." : "Reject"}
                       </button>
                     </div>
                   </td>
