@@ -4,8 +4,10 @@ A full-featured Resume Management Web Application built with the **MERN stack**,
 
 ## 🚀 Live Demo
 
-🔗 [Live App on Render](https://your-app-link-here.com)  
-📂 [GitHub Repository](https://github.com/your-username/resume-management)
+🔗 [Live App on Render]([https://your-app-link-here.com](https://resume-management-system-frontend.onrender.com
+))  
+📂 [GitHub Repository]([https://github.com/your-username/resume-management](https://github.com/Aishu-Ajagekar/Resume-Management-System.git
+))
 
 ---
 
