@@ -36,7 +36,7 @@ function App() {
         <Route path="/admin/job-applications-chart" element={<JobApplicationsChart />} />
       </Routes>
       <ToastContainer
-        autoClose={1500}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
