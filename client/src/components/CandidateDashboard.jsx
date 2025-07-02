@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useEffect, useState } from "react";
 import { getJobs } from "../services/jobApi";
 import API from "../services/api";
@@ -12,9 +8,8 @@ const JobList = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
-  const [appliedJobIds, setAppliedJobIds] = useState([]); // ✅ Track applied jobs
+  const [appliedJobIds, setAppliedJobIds] = useState([]);
 
-  // ✅ Fetch all jobs
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -27,32 +22,25 @@ const JobList = () => {
     fetchJobs();
   }, []);
 
-  // ✅ Fetch applied job IDs for this candidate
   useEffect(() => {
     const fetchAppliedJobs = async () => {
       const token = localStorage.getItem("token");
       try {
         const res = await API.get("/jobApplication/my-applications", {
-          headers: {
-            Authorization: token,
-          },
+          headers: { Authorization: token },
         });
-        setAppliedJobIds(res.data.appliedJobIds); // ✅ Save applied job IDs
+        setAppliedJobIds(res.data.appliedJobIds);
       } catch (error) {
-        console.error("Error fetching applied jobs", error);
         toast.error("Could not load applied jobs.");
       }
     };
-
     fetchAppliedJobs();
   }, []);
 
-  // ✅ Handle file selection
   const handleFileChange = (e) => {
     setResumeFile(e.target.files[0]);
   };
 
-  // ✅ Handle Apply submit
   const handleApply = async (jobId) => {
     if (!resumeFile) {
       return toast.warning("Please select a resume file first");
@@ -76,89 +64,87 @@ const JobList = () => {
       );
 
       toast.success("Applied successfully!");
-      setAppliedJobIds((prev) => [...prev, jobId]); // ✅ Update state
+      setAppliedJobIds((prev) => [...prev, jobId]);
       setSelectedJobId(null);
       setResumeFile(null);
     } catch (error) {
       toast.error("Failed to apply. Try again.");
-      console.log(error);
     }
   };
 
   return (
-    <div className="container mt-4">
-      <h2 className="mb-4">Available Jobs</h2>
+    <div className="container-fluid px-3 py-4">
+      <h2 className="mb-4 text-center text-md-start">Available Jobs</h2>
 
-      <table className="table table-bordered">
-        <thead className="table-light">
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Requirements</th>
-            <th>Apply</th>
-          </tr>
-        </thead>
-        <tbody>
-          {jobs.length > 0 ? (
-            jobs.map((job) => (
-              <tr key={job._id}>
-                <td>{job.title}</td>
-                <td>{job.description}</td>
-                <td>{job.requirements}</td>
-                <td>
-                  {/* ✅ Resume upload and submit view */}
-                  {selectedJobId === job._id ? (
-                    <div>
-                      <input
-                        type="file"
-                        accept=".pdf,.doc,.docx"
-                        className="form-control form-control-sm mb-1"
-                        onChange={handleFileChange}
-                      />
-                      <div className="d-flex align-items-center">
-                        <button
-                          className="btn btn-sm btn-success me-2"
-                          onClick={() => handleApply(job._id)}
-                        >
-                          Submit
-                        </button>
-                        <button
-                          className="btn btn-sm btn-secondary"
-                          onClick={() => {
-                            setSelectedJobId(null);
-                            setResumeFile(null);
-                          }}
-                        >
-                          Cancel
-                        </button>
+      <div className="table-responsive">
+        <table className="table table-bordered align-middle">
+          <thead className="table-dark">
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Requirements</th>
+              <th>Apply</th>
+            </tr>
+          </thead>
+          <tbody>
+            {jobs.length > 0 ? (
+              jobs.map((job) => (
+                <tr key={job._id}>
+                  <td>{job.title}</td>
+                  <td>{job.description}</td>
+                  <td>{job.requirements}</td>
+                  <td>
+                    {selectedJobId === job._id ? (
+                      <div className="d-flex flex-column gap-2">
+                        <input
+                          type="file"
+                          accept=".pdf,.doc,.docx"
+                          className="form-control form-control-sm"
+                          onChange={handleFileChange}
+                        />
+                        <div className="d-flex flex-wrap gap-2">
+                          <button
+                            className="btn btn-sm btn-success"
+                            onClick={() => handleApply(job._id)}
+                          >
+                            Submit
+                          </button>
+                          <button
+                            className="btn btn-sm btn-secondary"
+                            onClick={() => {
+                              setSelectedJobId(null);
+                              setResumeFile(null);
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ) : appliedJobIds.includes(job._id) ? (
-                    // ✅ Already applied
-                    <button className="btn btn-sm btn-secondary" disabled>
-                      Applied
-                    </button>
-                  ) : (
-                    // ✅ Show Apply
-                    <button
-                      className="btn btn-sm btn-primary"
-                      onClick={() => setSelectedJobId(job._id)}
-                    >
-                      Apply
-                    </button>
-                  )}
+                    ) : appliedJobIds.includes(job._id) ? (
+                      <button className="btn btn-sm btn-secondary" disabled>
+                        Applied
+                      </button>
+                    ) : (
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => setSelectedJobId(job._id)}
+                      >
+                        Apply
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center text-muted">
+                  No jobs found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="text-center">
-                No jobs found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
