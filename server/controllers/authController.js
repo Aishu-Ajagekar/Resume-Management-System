@@ -7,6 +7,7 @@ exports.signup = async (req, res) => {
   try {
     const { name, email, password, role, securityQuestion, answer } = req.body;
 
+    console.log("msgggg:" , req.body)
     if (!name || !email || !password || !role || !securityQuestion || !answer) {
       return res.status(400).json({
         success: false,

@@ -111,14 +111,14 @@ const Signup = () => {
                   required
                   disabled={loading}
                 >
-                  {/* <option value="">-- Select a question --</option>
-                  <option value="What is your pet's name?">
+                  <option value="">-- Select a question --</option>
+                  {/* <option value="What is your pet's name?">
                     What is your pet's name?
-                  </option>
+                  </option> */}
                   <option value="What is your favorite color?">
                     What is your favorite color?
                   </option>
-                  <option value="What city were you born in?">
+                  {/* <option value="What city were you born in?">
                     What city were you born in?
                   </option> */}
                   <option value="What is your favorite sport?">
@@ -126,6 +126,20 @@ const Signup = () => {
                   </option>
                 </select>
               </div>
+
+              {/* <div className="mb-3">
+                <label className="form-label">Security Question</label>
+                <input
+                  type="text"
+                  name="securityQuestion"
+                  className="form-control"
+                  placeholder="Enter your favourite sport"
+                  value={form.securityQuestion}
+                  onChange={handleChange}
+                  required
+                  disabled={loading}
+                />
+              </div> */}
 
               <div className="mb-3">
                 <label className="form-label">Your Answer</label>
