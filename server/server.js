@@ -8,7 +8,10 @@ dotenv.config();
 dbConnect();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+   origin: "https://resume-management-system-frontend.onrender.com", 
+  credentials: true
+}));
 app.use(express.json());
 // app.use("/uploads", express.static("uploads"));
 
